@@ -1,0 +1,6 @@
+{
+  "description": "Ordered list of core extension manifest paths relative to the repository root.",
+  "manifests": [
+    "manifests/core/prohelp.manifest.json"
+  ]
+}

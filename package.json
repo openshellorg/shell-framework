@@ -1,0 +1,42 @@
+{
+  "name": "@openshellorg/shell-framework",
+  "version": "0.0.0",
+  "description": "OpenShellOrg modular extension host — manifests, discovery, and registration",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@10.28.2",
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "manifests",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./manifests/core/*": "./manifests/core/*"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "pnpm build && node --test test/**/*.test.js",
+    "prepublishOnly": "pnpm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openshellorg/shell-framework.git"
+  },
+  "bugs": {
+    "url": "https://github.com/openshellorg/shell-framework/issues"
+  },
+  "homepage": "https://github.com/openshellorg/shell-framework#readme",
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "typescript": "^5.8.2"
+  }
+}

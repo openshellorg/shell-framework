@@ -1,0 +1,19 @@
+# Allow-list: ignore everything, then un-ignore tracked paths.
+*
+!.gitignore
+!LICENSE
+!README.md
+!CONTRIBUTING.md
+!package.json
+!pnpm-lock.yaml
+!tsconfig.json
+!manifests/
+!manifests/**
+!src/
+!src/**
+!test/
+!test/**
+!docs/
+!docs/**
+!.github/
+!.github/**
