@@ -1,0 +1,12 @@
+{
+  "id": "openshellorg/prohelp",
+  "name": "Prohelp",
+  "version": "0.0.0",
+  "core": true,
+  "repository": "https://github.com/openshellorg/prohelp",
+  "package": "@openshellorg/prohelp",
+  "cli": {
+    "repository": "https://github.com/openshellorg/prohelp-cli",
+    "binary": "prohelp"
+  }
+}
