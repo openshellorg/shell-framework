@@ -4,7 +4,9 @@ This repo is the **extension host** for OpenShellOrg. Architecture and thesis li
 
 ## Layout
 
-- `src/` — host implementation (manifest loading, registration, core discovery)
+- `src/` — host implementation (manifest loading, registration, discovery, PATH/`import()` loading)
+- `schemas/` — JSON Schema for manifests
+- `docs/` — manifest reference, distribution model, architecture cross-links
 - `manifests/core/` — JSON manifests that **point at** upstream repos; never vendor extension source here
 - `test/` — Node test runner checks against built `dist/`
 

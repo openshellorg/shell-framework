@@ -1,7 +1,8 @@
 {
   "name": "@openshellorg/shell-framework",
-  "version": "0.0.0",
-  "description": "OpenShellOrg modular extension host — manifests, discovery, and registration",
+  "version": "0.1.0",
+  "private": true,
+  "description": "OpenShellOrg modular extension host — manifests, discovery, registration, and loading",
   "license": "MIT",
   "type": "module",
   "packageManager": "pnpm@10.28.2",
@@ -11,6 +12,7 @@
   "files": [
     "dist",
     "manifests",
+    "schemas",
     "README.md",
     "LICENSE"
   ],
@@ -24,8 +26,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "pnpm build && node --test test/**/*.test.js",
-    "prepublishOnly": "pnpm test"
+    "test": "pnpm build && node --test test/**/*.test.js"
   },
   "repository": {
     "type": "git",

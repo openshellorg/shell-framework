@@ -1,12 +1,23 @@
 {
+  "$schema": "../../schemas/extension-manifest.schema.json",
+  "schemaVersion": 1,
   "id": "openshellorg/prohelp",
   "name": "Prohelp",
   "version": "0.0.0",
   "core": true,
+  "runtime": "dub",
   "repository": "https://github.com/openshellorg/prohelp",
-  "package": "@openshellorg/prohelp",
+  "dub": {
+    "package": "prohelp",
+    "configuration": "executable",
+    "binary": "prohelp"
+  },
   "cli": {
     "repository": "https://github.com/openshellorg/prohelp-cli",
     "binary": "prohelp"
+  },
+  "architecture": {
+    "doc": "https://github.com/openshellorg/shell-architecture/blob/main/docs/modules/ROOT/pages/prohelp-gutter.adoc",
+    "topics": ["prohelp-gutter", "open-shell"]
   }
 }
