@@ -4,7 +4,10 @@
 !LICENSE
 !README.md
 !CONTRIBUTING.md
+!CHANGELOG.md
 !package.json
+!schemas/
+!schemas/**
 !pnpm-lock.yaml
 !tsconfig.json
 !manifests/
