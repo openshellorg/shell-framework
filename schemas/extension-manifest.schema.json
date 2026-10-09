@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://openshellorg.github.io/shell-framework/schemas/extension-manifest.schema.json",
+  "title": "OpenShellOrg extension manifest",
+  "description": "Pointer manifest for a shell extension. The host registers metadata and resolves an install surface (CLI on PATH, dub package name, or optional Node entry). Extension source stays in upstream repos.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "name", "repository", "runtime"],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri",
+      "description": "JSON Schema URL for editors and CI validation."
+    },
+    "schemaVersion": {
+      "type": "integer",
+      "const": 1,
+      "description": "Manifest schema revision (bump when breaking fields change)."
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[a-z0-9][a-z0-9._/-]*$",
+      "description": "Stable id (e.g. openshellorg/prohelp)."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repository": {
+      "type": "string",
+      "format": "uri",
+      "description": "Canonical upstream source repository."
+    },
+    "version": {
+      "type": "string",
+      "description": "Pinned or marketing version hint; not used for package resolution."
+    },
+    "core": {
+      "type": "boolean",
+      "description": "When true, listed in manifests/core.index.json."
+    },
+    "runtime": {
+      "type": "string",
+      "enum": ["dub", "node", "cli"],
+      "description": "Primary load surface: D dub toolchain + CLI, Node module entry, or PATH CLI only."
+    },
+    "dub": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package"],
+      "properties": {
+        "package": {
+          "type": "string",
+          "minLength": 1,
+          "description": "dub.json \"name\" (registry or path dependency)."
+        },
+        "configuration": {
+          "type": "string",
+          "description": "dub configuration that builds the CLI (e.g. executable)."
+        },
+        "binary": {
+          "type": "string",
+          "description": "Expected binary name after dub build (defaults to cli.binary)."
+        }
+      }
+    },
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entry"],
+      "properties": {
+        "entry": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Node subpath or package export passed to dynamic import() when runtime is node."
+        }
+      }
+    },
+    "cli": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "repository": {
+          "type": "string",
+          "format": "uri",
+          "description": "Optional CLI bridge repo (e.g. prohelp-cli)."
+        },
+        "binary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Command name resolved on PATH (required for dub and cli runtimes)."
+        }
+      }
+    },
+    "architecture": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "doc": {
+          "type": "string",
+          "format": "uri",
+          "description": "Link into shell-architecture canon (Antora page or README)."
+        },
+        "topics": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Antora page stem names for cross-indexing."
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "runtime": { "const": "dub" } } },
+      "then": { "required": ["dub", "cli"] }
+    },
+    {
+      "if": { "properties": { "runtime": { "const": "cli" } } },
+      "then": { "required": ["cli"] }
+    },
+    {
+      "if": { "properties": { "runtime": { "const": "node" } } },
+      "then": { "required": ["node"] }
+    }
+  ]
+}

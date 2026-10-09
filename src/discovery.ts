@@ -1,3 +1,4 @@
+import { readdir } from "node:fs/promises";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -75,6 +76,39 @@ export async function discoverCoreExtensions(
         `${manifestPath}: core index entries must set "core": true`,
       );
     }
+    results.push({ manifest, manifestPath });
+  }
+  return results;
+}
+
+export interface DiscoverManifestDirectoryOptions {
+  rootDir?: string;
+  /** Directory relative to rootDir (default manifests/extensions). */
+  directory?: string;
+}
+
+/**
+ * Load every `*.manifest.json` in a directory (non-core user extensions).
+ */
+export async function discoverManifestDirectory(
+  options: DiscoverManifestDirectoryOptions = {},
+): Promise<Array<{ manifest: ExtensionManifest; manifestPath: string }>> {
+  const rootDir = options.rootDir ?? process.cwd();
+  const directory =
+    options.directory ?? path.join("manifests", "extensions");
+  const dirAbs = path.resolve(rootDir, directory);
+  let names: string[];
+  try {
+    names = await readdir(dirAbs);
+  } catch {
+    return [];
+  }
+  const results: Array<{ manifest: ExtensionManifest; manifestPath: string }> =
+    [];
+  for (const name of names.sort()) {
+    if (!name.endsWith(".manifest.json")) continue;
+    const manifestPath = path.join(dirAbs, name);
+    const manifest = await loadExtensionManifest(manifestPath);
     results.push({ manifest, manifestPath });
   }
   return results;
