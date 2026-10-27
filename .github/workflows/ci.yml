@@ -1,26 +1,57 @@
+# D build + test matrix (polyglot-ci conventions: triplet names, one workflow, latest action majors).
+# Every triplet runs dub unittests; the C ABI test builds the shared library and links
+# test/c/test_capi.c against include/shell_framework.h.
+# arm64 triplets are not in this test matrix yet: dmd has no arm64 backend; add ldc on
+# ubuntu-24.04-arm / windows-11-arm when release packaging lands.
 name: CI
 
 on:
   push:
-    branches: [main, "cursor/**"]
+    branches: [main]
+    tags: ["v*"]
   pull_request:
     branches: [main]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    name: ${{ matrix.triplet }} / ${{ matrix.dc }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { triplet: windows-x64, os: windows-latest, dc: ldc-latest }
+          - { triplet: windows-x64, os: windows-latest, dc: dmd-latest }
+          - { triplet: linux-x64, os: ubuntu-latest, dc: ldc-latest }
+          - { triplet: linux-x64, os: ubuntu-latest, dc: dmd-latest }
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v7
+      - uses: dlang-community/setup-dlang@v2.0.0
         with:
-          node-version: "22"
-          cache: pnpm
+          compiler: ${{ matrix.dc }}
 
-      - name: Install
-        run: pnpm install --frozen-lockfile
+      - name: Unittests
+        run: dub test --compiler="$DC"
 
-      - name: Test
-        run: pnpm test
+      - name: Build static library
+        run: dub build --compiler="$DC" --config=library
+
+      - name: Build shared library (C ABI)
+        run: dub build --compiler="$DC" --config=shared
+
+      - name: C ABI test (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          gcc -std=c99 -Wall -Wextra -Iinclude test/c/test_capi.c -Lbuild/shared -lshell-framework -o build/test_capi
+          LD_LIBRARY_PATH="$PWD/build/shared:$LD_LIBRARY_PATH" ./build/test_capi "$PWD"
+
+      - name: C ABI test (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          ls build/shared
+          clang -std=c99 -Wall -Iinclude test/c/test_capi.c build/shared/shell-framework.lib -o build/shared/test_capi.exe
+          ./build/shared/test_capi.exe "$PWD"

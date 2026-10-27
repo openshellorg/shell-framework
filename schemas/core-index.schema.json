@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/openshellorg/shell-framework/blob/main/schemas/core-index.schema.json",
+  "title": "OpenShellOrg core extension index",
+  "type": "object",
+  "required": ["manifests"],
+  "properties": {
+    "description": { "type": "string" },
+    "manifests": {
+      "type": "array",
+      "description": "Core manifest paths relative to the repository root",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "additionalProperties": false
+}

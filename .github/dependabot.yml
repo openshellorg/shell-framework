@@ -1,3 +1,4 @@
+# Rule: dev-centr/agent-rules general/github-actions-versions.md (monthly; one grouped PR).
 version: 2
 updates:
   - package-ecosystem: "github-actions"

@@ -1,0 +1,23 @@
+name "shell-framework"
+description "OpenShellOrg modular extension host: extension manifests, discovery, and registration, with a C ABI for other languages."
+authors "OpenShellOrg"
+copyright "Copyright (c) 2026 OpenShellOrg"
+license "MIT"
+homepage "https://github.com/openshellorg/shell-framework"
+targetName "shell-framework"
+
+configuration "library" {
+	targetType "library"
+	targetPath "build/lib"
+}
+
+configuration "shared" {
+	targetType "dynamicLibrary"
+	targetPath "build/shared"
+	versions "SF_SharedLib"
+}
+
+configuration "unittest" {
+	targetType "library"
+	targetPath "build/test"
+}
