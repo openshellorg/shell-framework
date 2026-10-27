@@ -1,6 +1,6 @@
 # Extension manifest
 
-Core and third-party extensions are described by JSON manifests ([`schemas/extension-manifest.schema.json`](../schemas/extension-manifest.schema.json)). The host loads manifests from disk, registers them, and **resolves** an install surface (PATH binary or Node `import()`). It does not clone or embed extension repositories.
+Core and third-party extensions are described by JSON manifests ([`schemas/extension-manifest.schema.json`](../schemas/extension-manifest.schema.json)). The host loads manifests from disk, registers them, and **resolves** an install surface (a CLI binary on `PATH`). It does not clone or embed extension repositories.
 
 See also: [distribution and runtime](distribution-and-runtime.md), [architecture cross-links](architecture-crosslinks.md).
 
@@ -19,18 +19,18 @@ See also: [distribution and runtime](distribution-and-runtime.md), [architecture
 | Field | Type | Description |
 |-------|------|-------------|
 | `$schema` | string | Schema URL for editors |
-| `version` | string | Version hint (not used for dub/npm resolution) |
+| `version` | string | Version hint (not used for dub resolution) |
 | `core` | boolean | When `true`, listed in `manifests/core.index.json` |
 | `dub` | object | `package`, optional `configuration`, optional `binary` |
-| `node` | object | `entry` — passed to dynamic `import()` |
+| `node` | object | `entry` - Node module entry (validated; not loaded by the D host) |
 | `cli` | object | `binary` (required for `dub`/`cli`), optional `repository` |
 | `architecture` | object | `doc` URL, `topics[]` stems in shell-architecture |
 
 ## Runtime rules
 
-- **`dub`** — OSO D extensions (e.g. Prohelp). Requires `dub.package` and `cli.binary`. Host checks `PATH`; user builds with dub upstream.
-- **`cli`** — Preinstalled binary only.
-- **`node`** — Optional JS/TS modules; `node.entry` must be importable from the host process.
+- **`dub`** - OSO D extensions (e.g. Prohelp). Requires `dub.package` and `cli.binary`. Host checks `PATH`; user builds with dub upstream.
+- **`cli`** - Preinstalled binary only.
+- **`node`** - Optional JS/TS modules. The D host validates `node.entry` and reports the extension as not applicable; a Node host loads it through the planned Node binding.
 
 ## Example (Prohelp)
 
@@ -38,4 +38,4 @@ See [`manifests/core/prohelp.manifest.json`](../manifests/core/prohelp.manifest.
 
 ## User extensions
 
-Drop additional `*.manifest.json` files under `manifests/extensions/` and pass `includeUserManifests: true` to `bootstrapExtensionHost()`.
+Drop additional `*.manifest.json` files under `manifests/extensions/` and set `BootstrapOptions.includeUserManifests = true` for `bootstrapExtensionHost` (D). `sf_discover` in the C ABI always includes them.
