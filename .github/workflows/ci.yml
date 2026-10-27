@@ -30,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: dlang-community/setup-dlang@v2.0.0
+      - uses: dlang-community/setup-dlang@v2
         with:
           compiler: ${{ matrix.dc }}
 
